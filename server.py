@@ -87,6 +87,21 @@ def process_message(message, client_socket):
             response = "ERRO;Atuador não encontrado"
             client_socket.send(response.encode('utf-8'))
             print("[+] Erro: Atuador não encontrado")
+    
+    elif msg_type == "SET_SENSOR_LIMITS":
+        sensor_tipo = parts.get("Sensor_Tipo")
+        min_val = float(parts.get("Min"))
+        max_val = float(parts.get("Max"))
+        
+        if sensor_tipo in limites:
+            limites[sensor_tipo]["min"] = min_val
+            limites[sensor_tipo]["max"] = max_val
+            response = f"ACK_LIMITS;Sensor_Tipo:{sensor_tipo};Min:{min_val};Max:{max_val}"
+            print(f"[+] Limites do sensor {sensor_tipo} atualizados: Min={min_val}, Max={max_val}")
+        else:
+            response = "ERRO;Tipo de sensor não encontrado"
+        
+        client_socket.send(response.encode('utf-8'))
 
 def check_conditions(sensor_type, valor, client_socket):
     min_val = limites[sensor_type]["min"]

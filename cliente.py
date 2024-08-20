@@ -55,12 +55,20 @@ def requisitar_dados(client_socket):
 
 def enviar_comando(client_socket):
     print("\nEscolha o tipo de comando:")
-    print("1. Sensor")
-    print("2. Atuador")
+    print("1. Sensor (Alterar Limites)")
+    print("2. Atuador (Ligar/Desligar)")
     choice = input("Digite o número da opção desejada: ")
 
     if choice == "1":
-        print("Não é possível enviar comandos para sensores.")
+        listar_sensores(client_socket)
+        sensor_tipo = input("Digite o tipo do sensor para alterar os limites: ")
+        min_val = input("Digite o valor mínimo: ")
+        max_val = input("Digite o valor máximo: ")
+        message = f"Tipo:SET_SENSOR_LIMITS;Sensor_Tipo:{sensor_tipo};Min:{min_val};Max:{max_val}"
+        client_socket.send(message.encode('utf-8'))
+        response = client_socket.recv(1024).decode('utf-8')
+        print(f"\nResposta do servidor: {response}")
+        
     elif choice == "2":
         listar_atuadores(client_socket)
         atuador_id = input("Digite o ID do atuador para enviar o comando: ")
@@ -69,6 +77,7 @@ def enviar_comando(client_socket):
         client_socket.send(message.encode('utf-8'))
         response = client_socket.recv(1024).decode('utf-8')
         print(f"\nResposta do servidor: {response}")
+        
     else:
         print("Opção inválida.")
 
