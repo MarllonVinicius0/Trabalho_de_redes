@@ -108,7 +108,7 @@ def check_conditions(sensor_type, valor, client_socket):
     max_val = limites[sensor_type]["max"]
     
     if sensor_type == "Temperatura":
-        if valor < min_val:
+        if valor < min_val: 
             send_command("Aquecedor", "LIGAR", client_socket)
             send_command("Resfriador", "DESLIGAR", client_socket)
         elif valor > max_val:
